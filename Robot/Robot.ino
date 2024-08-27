@@ -1,3 +1,5 @@
+#include <CustomQTRSensors.h>
+
 const int buzzerPin = 11;
 
 const int echoPin = 2;
@@ -14,10 +16,21 @@ const int ledPin = 8;
 
 float duration, distance;
 float theWantedDistance = 5.0;
-const int speed = 150;
+const int speed = 255;
 const int turningSpeed = 100;
+int error;
+
+#define NUM_SENSORS   6     
+#define TIMEOUT       2000  
+#define EMITTER_PIN  6     
+
+QTRSensorsRC qtrrc((unsigned char[]) {A5,A4,A3,A2,A1,A0,254,8},
+  NUM_SENSORS, TIMEOUT, EMITTER_PIN); 
+unsigned int sensorValues[NUM_SENSORS];
+unsigned int position;
 
 void setup() {
+  delay(500);
   pinMode(ledPin, OUTPUT);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
@@ -35,6 +48,8 @@ void setup() {
 
   digitalWrite(ledPin, HIGH);
 
+  qtrrc.restoreCalibration();
+
 }
 
 void loop() {
@@ -50,6 +65,8 @@ void loop() {
 
   if (distance <= theWantedDistance) {
 
+    position = qtrrc.readLine(sensorValues);
+    error = position - 2500;
   }
   else {
 
@@ -82,21 +99,21 @@ void backward() {
 void FturnLeft() {
   digitalWrite(MotorR1, HIGH);
   digitalWrite(MotorR2, LOW)
-  digitalWrite(MotorRE, 0);
-
-  digitalWrite(MotorL1, HIGH);
-  digitalWrite(MotorL2, LOW);
-  digitalWrite(MotorLE, turningSpeed);
-}
-
-void FturnRight() {
-  digitalWrite(MotorR1, HIGH);
-  digitalWrite(MotorR2, LOW);
   digitalWrite(MotorRE, turningSpeed);
 
   digitalWrite(MotorL1, HIGH);
   digitalWrite(MotorL2, LOW);
   digitalWrite(MotorLE, 0);
+}
+
+void FturnRight() {
+  digitalWrite(MotorR1, HIGH);
+  digitalWrite(MotorR2, LOW);
+  digitalWrite(MotorRE, 0);
+
+  digitalWrite(MotorL1, HIGH);
+  digitalWrite(MotorL2, LOW);
+  digitalWrite(MotorLE, turningSpeed);
 }
 
 void BturnLeft() {
