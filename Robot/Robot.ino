@@ -52,6 +52,7 @@ void setup() {
   pinMode(ledPin, OUTPUT);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
   Serial.begin(9600);
 
   Serial.println("Robot başlatılıyor...")
@@ -228,6 +229,7 @@ void envCheck() {
       Stop();
       delay(500);
 
+      digitalWrite(buzzerPin, HIGH);
       endOfEverything++;
     }
 
