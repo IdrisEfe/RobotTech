@@ -40,7 +40,7 @@ int endOfEverything = 0;
 
 #define NUM_SENSORS   6     
 #define TIMEOUT       2000  
-#define EMITTER_PIN  6     
+#define EMITTER_PIN  12     
 
 QTRSensorsRC qtrrc((unsigned char[]) {A5,A4,A3,A2,A1,A0,254,8},
   NUM_SENSORS, TIMEOUT, EMITTER_PIN); 
@@ -73,6 +73,10 @@ void setup() {
 
 void loop() {
 
+  if(endOfEverything != 0){
+    while(true);
+  }
+
   digitalWrite(trigPin, LOW);
   delayMicroSeconds(5);
   digitalWrite(trigPin, HIGH);
@@ -87,11 +91,6 @@ void loop() {
   else {
     encCheck();
   }
-
-  if(endOfEverything != 0){
-    while(true);
-  }
-
 
 }
 
